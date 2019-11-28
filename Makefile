@@ -51,6 +51,11 @@ CONFIG=Debug
 # If set to "true" or "1", display full command-lines when building.
 VERBOSE=
 
+# Set the BLE stack mode
+#
+# DUAL   -- BLE Dual CPU Mode: host on the CM4 core, controller on the CM0+ core 
+# SINGLE -- BLE Single CPU Mode: host and controller on the CM4 core
+BLE_STACK_MODE=SINGLE
 
 ################################################################################
 # Advanced Configuration
@@ -66,10 +71,18 @@ VERBOSE=
 # ... then code in directories named COMPONENT_foo and COMPONENT_bar will be
 # added to the build
 #
-COMPONENTS+=BLESS_HOST BLESS_CONTROLLER
+ifeq ($(BLE_STACK_MODE),DUAL)
+ COMPONENTS=BLESS_HOST_IPC CM0P_BLESS
+else
+ COMPONENTS=BLESS_HOST BLESS_CONTROLLER
+endif
 
 # Like COMPONENTS, but disable optional code that was enabled by default.
-DISABLE_COMPONENTS=
+ifeq ($(BLE_STACK_MODE),DUAL)
+ DISABLE_COMPONENTS=CM0P_SLEEP
+else
+ DISABLE_COMPONENTS=
+endif
 
 # By default the build system automatically looks in the Makefile's directory
 # tree for source code and builds it. The SOURCES variable can be used to
@@ -112,7 +125,17 @@ LDFLAGS=
 LDLIBS=
 
 # Path to the linker script to use (if empty, use the default linker script).
-LINKER_SCRIPT=
+ifeq ($(BLE_STACK_MODE),DUAL)
+ ifeq ($(TOOLCHAIN),ARM)
+  LINKER_SCRIPT=./ble_dual_cpu_mode_linker/TOOLCHAIN_$(TOOLCHAIN)/cy8c6xx7_cm4_dual.scat
+ else ifeq ($(TOOLCHAIN),IAR)
+  LINKER_SCRIPT=./ble_dual_cpu_mode_linker/TOOLCHAIN_$(TOOLCHAIN)/cy8c6xx7_cm4_dual.icf
+ else
+  LINKER_SCRIPT=./ble_dual_cpu_mode_linker/TOOLCHAIN_$(TOOLCHAIN)/cy8c6xx7_cm4_dual.ld
+ endif
+else
+ LINKER_SCRIPT=
+endif
 
 # Custom pre-build commands to run.
 PREBUILD=

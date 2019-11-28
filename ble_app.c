@@ -67,10 +67,12 @@ static uint16_t negotiatedMtu = DEFAULT_MTU_SIZE;
 *  Wrapper function for handling interrupts from BLESS.
 *
 ******************************************************************************/
+#if (CY_BLE_CONTR_CORE == CY_CPU_CORTEX_M4)
 static void bless_interrupt_handler(void)
 {
     Cy_BLE_BlessIsrHandler();
 }
+#endif
 
 /*******************************************************************************
 * Function Name: ble_app_callback
@@ -506,7 +508,19 @@ cy_en_ble_api_result_t ble_app_init(void)
     BLE_DBG_PRINTF("****************************************************************\r\n");
     BLE_DBG_PRINTF("*                  PSoC6 Custom Service Demo                   *\r\n");
     BLE_DBG_PRINTF("****************************************************************\r\n");
-    
+
+#if (CY_BLE_CONTR_CORE == CY_CPU_CORTEX_M4)
+    BLE_DBG_PRINTF("BLE stack controller on CM4 core, ");
+#else
+    BLE_DBG_PRINTF("BLE stack controller on CM0+ core, ");
+#endif
+#if (CY_BLE_HOST_CORE == CY_CPU_CORTEX_M4)
+    BLE_DBG_PRINTF("host on CM4 core\r\n");
+#else
+    BLE_DBG_PRINTF("host on CM0+ core\r\n");
+#endif
+
+#if (CY_BLE_CONTR_CORE == CY_CPU_CORTEX_M4)
     static const cy_stc_sysint_t bless_isr_config =
     {
       /* The BLESS interrupt */
@@ -515,12 +529,11 @@ cy_en_ble_api_result_t ble_app_init(void)
       /* The interrupt priority number */
       .intrPriority = BLESS_INTR_PRIORITY
     };
-
     /* Hook interrupt service routines for BLESS */
     (void) Cy_SysInt_Init(&bless_isr_config, bless_interrupt_handler);
-
     /* Store the pointer to blessIsrCfg in the BLE configuration structure */
     cy_ble_config.hw->blessIsrConfig = &bless_isr_config;
+#endif
 
     /* Registers the generic callback functions  */
     Cy_BLE_RegisterEventCallback(ble_app_callback);

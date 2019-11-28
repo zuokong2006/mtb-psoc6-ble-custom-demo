@@ -2,6 +2,8 @@
 
 This code example demonstrates the implementation of a simple data receiving and sending by BLE custom characteristics using PSoC 6 MCU with Bluetooth Low Energy (BLE) Connectivity.
 
+This code example can support BLE Dual CPU Mode and BLE Single CPU Mode, set the DUAL or SINGLE to BLE_STACK_MODE variable in the Makefile.
+
 ## Requirements
 
 - [ModusToolbox™ IDE](https://www.cypress.com/products/modustoolbox-software-environment) v2.0
@@ -11,6 +13,35 @@ This code example demonstrates the implementation of a simple data receiving and
 ## Supported Kits
 
 - [PSoC 6 BLE Pioneer Kit](https://www.cypress.com/CY8CKIT-062-BLE) (CY8CKIT-062-BLE)
+
+## Using the Code Example 
+
+#### In the ModusToolbox IDE
+
+1. Click the **New Application** link in the Quick Panel (or, use **File > New > ModusToolbox IDE Application**).
+
+2. Pick a kit supported by the code example from the list shown in the **IDE Application** dialog. 
+
+   When you select a supported kit, the example is reconfigured automatically to work with the kit. To work with a different supported kit later, use the **Library Manager** to choose the BSP for the supported kit. You can use the Library Manager to select or update the BSP and firmware libraries used in this application. To access the Library Manager, right-click the application name from the Project Workspace window in the IDE, and select **ModusToolbox > Library Manager**. For more details, see the IDE User Guide: *{ModusToolbox install directory}/ide_2.0/docs/mt_ide_user_guide.pdf*.
+
+   You can also just start the application creation process again and select a different kit. 
+
+   If you want to use the application for a kit not listed here, you may need to update the source files. If the kit does not have the required resources, the application may not work.
+
+3. In the **Starter Application** window, choose the example.
+
+4. Click **Next** and complete the application creation process.
+
+See [Importing Code Example into ModusToolbox IDE - KBA225201](https://community.cypress.com/docs/DOC-15968) for details.
+
+#### In Command Line Tools
+
+1. Download and unzip this repository onto your local machine, or clone the repository.
+2. Open the CLI terminal and navigate to the application folder.
+3. Import required libraries by executing the command 
+      ```
+      make getlibs
+      ```
 
 ## Related Resources
 
